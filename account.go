@@ -6,14 +6,12 @@ import (
 	"context"
 	"net/http"
 	"net/url"
-	"reflect"
 
 	"github.com/bolt/bolt-go/internal/apijson"
 	"github.com/bolt/bolt-go/internal/apiquery"
 	"github.com/bolt/bolt-go/internal/param"
 	"github.com/bolt/bolt-go/internal/requestconfig"
 	"github.com/bolt/bolt-go/option"
-	"github.com/tidwall/gjson"
 )
 
 // AccountService contains methods and other services that help with interacting
@@ -56,9 +54,9 @@ func (r *AccountService) Exists(ctx context.Context, params AccountExistsParams,
 }
 
 type Account struct {
-	Addresses      []Address       `json:"addresses,required"`
-	PaymentMethods []PaymentMethod `json:"payment_methods,required"`
-	Profile        Profile         `json:"profile"`
+	Addresses      []AccountAddress `json:"addresses,required"`
+	PaymentMethods []PaymentMethod  `json:"payment_methods,required"`
+	Profile        Profile          `json:"profile"`
 	JSON           accountJSON
 }
 
@@ -74,176 +72,6 @@ type accountJSON struct {
 func (r *Account) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
-
-type Address struct {
-	ID             string `json:"id,required"`
-	CountryCode    string `json:"country_code,required"`
-	FirstName      string `json:"first_name,required"`
-	LastName       string `json:"last_name,required"`
-	Locality       string `json:"locality,required"`
-	PostalCode     string `json:"postal_code,required"`
-	StreetAddress1 string `json:"street_address1,required"`
-	Company        string `json:"company"`
-	Email          string `json:"email" format:"email"`
-	IsDefault      bool   `json:"is_default"`
-	Phone          string `json:"phone" format:"phone"`
-	Region         string `json:"region"`
-	StreetAddress2 string `json:"street_address2"`
-	JSON           addressJSON
-}
-
-// addressJSON contains the JSON metadata for the struct [Address]
-type addressJSON struct {
-	ID             apijson.Field
-	CountryCode    apijson.Field
-	FirstName      apijson.Field
-	LastName       apijson.Field
-	Locality       apijson.Field
-	PostalCode     apijson.Field
-	StreetAddress1 apijson.Field
-	Company        apijson.Field
-	Email          apijson.Field
-	IsDefault      apijson.Field
-	Phone          apijson.Field
-	Region         apijson.Field
-	StreetAddress2 apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *Address) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type PaymentMethod struct {
-	Tag PaymentMethodTag `json:".tag,required"`
-	ID  string           `json:"id"`
-	// The ID of credit card's billing address
-	BillingAddressID string `json:"billing_address_id"`
-	JSON             paymentMethodJSON
-	CreditCard
-}
-
-// paymentMethodJSON contains the JSON metadata for the struct [PaymentMethod]
-type paymentMethodJSON struct {
-	Tag              apijson.Field
-	ID               apijson.Field
-	BillingAddressID apijson.Field
-	raw              string
-	ExtraFields      map[string]apijson.Field
-}
-
-func (r *PaymentMethod) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type PaymentMethodTag string
-
-const (
-	PaymentMethodTagCreditCard PaymentMethodTag = "credit_card"
-)
-
-// The credit card's billing address
-//
-// Union satisfied by [PaymentMethodBillingAddressAddressReferenceID] or
-// [PaymentMethodBillingAddressAddressReferenceExplicit].
-type PaymentMethodBillingAddress interface {
-	implementsPaymentMethodBillingAddress()
-}
-
-func init() {
-	apijson.RegisterUnion(
-		reflect.TypeOf((*PaymentMethodBillingAddress)(nil)).Elem(),
-		".tag",
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			DiscriminatorValue: "\"id\"",
-			Type:               reflect.TypeOf(PaymentMethodBillingAddressAddressReferenceID{}),
-		},
-		apijson.UnionVariant{
-			TypeFilter:         gjson.JSON,
-			DiscriminatorValue: "\"explicit\"",
-			Type:               reflect.TypeOf(PaymentMethodBillingAddressAddressReferenceExplicit{}),
-		},
-	)
-}
-
-type PaymentMethodBillingAddressAddressReferenceID struct {
-	// The address's ID
-	ID string `json:"id,required"`
-	// The type of address reference
-	Tag  PaymentMethodBillingAddressAddressReferenceIDTag `json:".tag,required"`
-	JSON paymentMethodBillingAddressAddressReferenceIDJSON
-}
-
-// paymentMethodBillingAddressAddressReferenceIDJSON contains the JSON metadata for
-// the struct [PaymentMethodBillingAddressAddressReferenceID]
-type paymentMethodBillingAddressAddressReferenceIDJSON struct {
-	ID          apijson.Field
-	Tag         apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *PaymentMethodBillingAddressAddressReferenceID) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The type of address reference
-type PaymentMethodBillingAddressAddressReferenceIDTag string
-
-const (
-	PaymentMethodBillingAddressAddressReferenceIDTagID PaymentMethodBillingAddressAddressReferenceIDTag = "id"
-)
-
-type PaymentMethodBillingAddressAddressReferenceExplicit struct {
-	ID string `json:"id,required"`
-	// The type of address reference
-	Tag            PaymentMethodBillingAddressAddressReferenceExplicitTag `json:".tag,required"`
-	CountryCode    string                                                 `json:"country_code,required"`
-	FirstName      string                                                 `json:"first_name,required"`
-	LastName       string                                                 `json:"last_name,required"`
-	Locality       string                                                 `json:"locality,required"`
-	PostalCode     string                                                 `json:"postal_code,required"`
-	StreetAddress1 string                                                 `json:"street_address1,required"`
-	Company        string                                                 `json:"company"`
-	Email          string                                                 `json:"email" format:"email"`
-	Phone          string                                                 `json:"phone" format:"phone"`
-	Region         string                                                 `json:"region"`
-	StreetAddress2 string                                                 `json:"street_address2"`
-	JSON           paymentMethodBillingAddressAddressReferenceExplicitJSON
-}
-
-// paymentMethodBillingAddressAddressReferenceExplicitJSON contains the JSON
-// metadata for the struct [PaymentMethodBillingAddressAddressReferenceExplicit]
-type paymentMethodBillingAddressAddressReferenceExplicitJSON struct {
-	ID             apijson.Field
-	Tag            apijson.Field
-	CountryCode    apijson.Field
-	FirstName      apijson.Field
-	LastName       apijson.Field
-	Locality       apijson.Field
-	PostalCode     apijson.Field
-	StreetAddress1 apijson.Field
-	Company        apijson.Field
-	Email          apijson.Field
-	Phone          apijson.Field
-	Region         apijson.Field
-	StreetAddress2 apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *PaymentMethodBillingAddressAddressReferenceExplicit) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-// The type of address reference
-type PaymentMethodBillingAddressAddressReferenceExplicitTag string
-
-const (
-	PaymentMethodBillingAddressAddressReferenceExplicitTagExplicit PaymentMethodBillingAddressAddressReferenceExplicitTag = "explicit"
-)
 
 type Profile struct {
 	// An email address.

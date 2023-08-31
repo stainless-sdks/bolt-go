@@ -19,7 +19,7 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
 	)
-	account, err := client.Account.Get(context.TODO(), bolt.AccountGetParams{
+	account, err := client.Accounts.Get(context.TODO(), bolt.AccountGetParams{
 		XPublishableKey: bolt.F("string"),
 	})
 	if err != nil {

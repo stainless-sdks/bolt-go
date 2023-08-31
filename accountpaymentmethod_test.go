@@ -20,7 +20,7 @@ func TestAccountPaymentMethodNewWithOptionalParams(t *testing.T) {
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
 	)
-	_, err := client.Account.PaymentMethods.New(context.TODO(), bolt.AccountPaymentMethodNewParams{
+	_, err := client.Accounts.PaymentMethods.New(context.TODO(), bolt.AccountPaymentMethodNewParams{
 		Token: bolt.F("a1B2c3D4e5F6G7H8i9J0k1L2m3N4o5P6Q7r8S9t0"),
 		Tag:   bolt.F(bolt.AccountPaymentMethodNewParamsTagCreditCard),
 		BillingAddress: bolt.F[bolt.AccountPaymentMethodNewParamsBillingAddress](bolt.AccountPaymentMethodNewParamsBillingAddressAddressReferenceID(bolt.AccountPaymentMethodNewParamsBillingAddressAddressReferenceID{
@@ -50,7 +50,7 @@ func TestAccountPaymentMethodDelete(t *testing.T) {
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
 	)
-	err := client.Account.PaymentMethods.Delete(
+	err := client.Accounts.PaymentMethods.Delete(
 		context.TODO(),
 		"D4g3h5tBuVYK9",
 		bolt.AccountPaymentMethodDeleteParams{

@@ -13,7 +13,7 @@ import (
 // and instead use the [NewClient] method instead.
 type Client struct {
 	Options  []option.RequestOption
-	Account  *AccountService
+	Accounts *AccountService
 	Payments *PaymentService
 	Guest    *GuestService
 	Merchant *MerchantService
@@ -34,7 +34,7 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 
 	r = &Client{Options: opts}
 
-	r.Account = NewAccountService(opts...)
+	r.Accounts = NewAccountService(opts...)
 	r.Payments = NewPaymentService(opts...)
 	r.Guest = NewGuestService(opts...)
 	r.Merchant = NewMerchantService(opts...)

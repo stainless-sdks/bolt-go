@@ -40,7 +40,7 @@ func main() {
 		option.WithAPIKey("my api key"),      // defaults to os.LookupEnv("BOLT_API_KEY")
 		option.WithEnvironmentEnvironment1(), // defaults to option.WithEnvironmentProduction()
 	)
-	account, err := client.Account.Get(context.TODO(), bolt.AccountGetParams{
+	account, err := client.Accounts.Get(context.TODO(), bolt.AccountGetParams{
 		XPublishableKey: bolt.F("string"),
 	})
 	if err != nil {
@@ -135,7 +135,7 @@ client := bolt.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Account.Get(context.TODO(), ...,
+client.Accounts.Get(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -172,7 +172,7 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Account.Get(context.TODO(), bolt.AccountGetParams{
+_, err := client.Accounts.Get(context.TODO(), bolt.AccountGetParams{
 	XPublishableKey: bolt.F("string"),
 })
 if err != nil {
@@ -200,7 +200,7 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Account.Get(
+client.Accounts.Get(
 	ctx,
 	bolt.AccountGetParams{
 		XPublishableKey: bolt.F("string"),
@@ -225,7 +225,7 @@ client := bolt.NewClient(
 )
 
 // Override per-request:
-client.Account.Get(
+client.Accounts.Get(
 	context.TODO(),
 	bolt.AccountGetParams{
 		XPublishableKey: bolt.F("string"),

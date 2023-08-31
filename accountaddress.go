@@ -31,7 +31,7 @@ func NewAccountAddressService(opts ...option.RequestOption) (r *AccountAddressSe
 }
 
 // Add an address to the shopper's account
-func (r *AccountAddressService) New(ctx context.Context, params AccountAddressNewParams, opts ...option.RequestOption) (res *Address, err error) {
+func (r *AccountAddressService) New(ctx context.Context, params AccountAddressNewParams, opts ...option.RequestOption) (res *AccountAddress, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "account/addresses"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
@@ -41,7 +41,7 @@ func (r *AccountAddressService) New(ctx context.Context, params AccountAddressNe
 // Edit an existing address on the shopper's account. This does not edit addresses
 // that are already associated with other resources, such as transactions or
 // shipments.
-func (r *AccountAddressService) Update(ctx context.Context, id string, params AccountAddressUpdateParams, opts ...option.RequestOption) (res *Address, err error) {
+func (r *AccountAddressService) Update(ctx context.Context, id string, params AccountAddressUpdateParams, opts ...option.RequestOption) (res *AccountAddress, err error) {
 	opts = append(r.Options[:], opts...)
 	path := fmt.Sprintf("account/addresses/%s", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, params, &res, opts...)
@@ -58,7 +58,7 @@ func (r *AccountAddressService) Delete(ctx context.Context, id string, body Acco
 	return
 }
 
-type Address struct {
+type AccountAddress struct {
 	ID             string `json:"id,required"`
 	CountryCode    string `json:"country_code,required"`
 	FirstName      string `json:"first_name,required"`
@@ -72,11 +72,11 @@ type Address struct {
 	Phone          string `json:"phone" format:"phone"`
 	Region         string `json:"region"`
 	StreetAddress2 string `json:"street_address2"`
-	JSON           addressJSON
+	JSON           accountAddressJSON
 }
 
-// addressJSON contains the JSON metadata for the struct [Address]
-type addressJSON struct {
+// accountAddressJSON contains the JSON metadata for the struct [AccountAddress]
+type accountAddressJSON struct {
 	ID             apijson.Field
 	CountryCode    apijson.Field
 	FirstName      apijson.Field
@@ -94,7 +94,7 @@ type addressJSON struct {
 	ExtraFields    map[string]apijson.Field
 }
 
-func (r *Address) UnmarshalJSON(data []byte) (err error) {
+func (r *AccountAddress) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 

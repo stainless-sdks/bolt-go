@@ -20,7 +20,7 @@ func TestAccountAddressNewWithOptionalParams(t *testing.T) {
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
 	)
-	_, err := client.Account.Addresses.New(context.TODO(), bolt.AccountAddressNewParams{
+	_, err := client.Accounts.Addresses.New(context.TODO(), bolt.AccountAddressNewParams{
 		CountryCode:     bolt.F("US"),
 		FirstName:       bolt.F("Alice"),
 		LastName:        bolt.F("Baker"),
@@ -52,7 +52,7 @@ func TestAccountAddressUpdateWithOptionalParams(t *testing.T) {
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
 	)
-	_, err := client.Account.Addresses.Update(
+	_, err := client.Accounts.Addresses.Update(
 		context.TODO(),
 		"D4g3h5tBuVYK9",
 		bolt.AccountAddressUpdateParams{
@@ -88,7 +88,7 @@ func TestAccountAddressDelete(t *testing.T) {
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
 	)
-	err := client.Account.Addresses.Delete(
+	err := client.Accounts.Addresses.Delete(
 		context.TODO(),
 		"D4g3h5tBuVYK9",
 		bolt.AccountAddressDeleteParams{
