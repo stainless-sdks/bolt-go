@@ -19,6 +19,7 @@ func TestAccountPaymentMethodNewWithOptionalParams(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
 	_, err := client.Accounts.PaymentMethods.New(context.TODO(), bolt.AccountPaymentMethodNewParams{
 		Token: bolt.F("a1B2c3D4e5F6G7H8i9J0k1L2m3N4o5P6Q7r8S9t0"),
@@ -27,11 +28,10 @@ func TestAccountPaymentMethodNewWithOptionalParams(t *testing.T) {
 			Tag: bolt.F(bolt.AccountPaymentMethodNewParamsBillingAddressAddressReferenceIDTagID),
 			ID:  bolt.F("D4g3h5tBuVYK9"),
 		})),
-		Bin:             bolt.F("411111"),
-		Expiration:      bolt.F("2025-03"),
-		Last4:           bolt.F("1004"),
-		Network:         bolt.F(bolt.AccountPaymentMethodNewParamsNetworkVisa),
-		XPublishableKey: bolt.F("string"),
+		Bin:        bolt.F("411111"),
+		Expiration: bolt.F("2025-03"),
+		Last4:      bolt.F("1004"),
+		Network:    bolt.F(bolt.AccountPaymentMethodNewParamsNetworkVisa),
 	})
 	if err != nil {
 		var apierr *bolt.Error
@@ -49,14 +49,9 @@ func TestAccountPaymentMethodDelete(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
-	err := client.Accounts.PaymentMethods.Delete(
-		context.TODO(),
-		"D4g3h5tBuVYK9",
-		bolt.AccountPaymentMethodDeleteParams{
-			XPublishableKey: bolt.F("string"),
-		},
-	)
+	err := client.Accounts.PaymentMethods.Delete(context.TODO(), "D4g3h5tBuVYK9")
 	if err != nil {
 		var apierr *bolt.Error
 		if errors.As(err, &apierr) {

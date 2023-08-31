@@ -19,6 +19,7 @@ func TestPaymentNewWithOptionalParams(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
 	_, err := client.Payments.New(context.TODO(), bolt.PaymentNewParams{
 		Cart: bolt.F(bolt.PaymentNewParamsCart{
@@ -119,7 +120,6 @@ func TestPaymentNewWithOptionalParams(t *testing.T) {
 			Tag: bolt.F(bolt.PaymentNewParamsPaymentMethodTagSavedPaymentMethod),
 			ID:  bolt.F("id"),
 		}),
-		XPublishableKey: bolt.F("string"),
 	})
 	if err != nil {
 		var apierr *bolt.Error

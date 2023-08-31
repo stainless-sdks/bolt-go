@@ -31,10 +31,10 @@ func NewPaymentService(opts ...option.RequestOption) (r *PaymentService) {
 
 // Initialize a Bolt payment token that will be used to reference this payment to
 // Bolt when it is updated or finalized for logged in shoppers.
-func (r *PaymentService) New(ctx context.Context, params PaymentNewParams, opts ...option.RequestOption) (res *PaymentNewResponse, err error) {
+func (r *PaymentService) New(ctx context.Context, body PaymentNewParams, opts ...option.RequestOption) (res *PaymentNewResponse, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "payments"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
@@ -104,9 +104,8 @@ const (
 )
 
 type PaymentNewParams struct {
-	Cart            param.Field[PaymentNewParamsCart]          `json:"cart,required"`
-	PaymentMethod   param.Field[PaymentNewParamsPaymentMethod] `json:"payment_method,required"`
-	XPublishableKey param.Field[string]                        `header:"X-Publishable-Key,required"`
+	Cart          param.Field[PaymentNewParamsCart]          `json:"cart,required"`
+	PaymentMethod param.Field[PaymentNewParamsPaymentMethod] `json:"payment_method,required"`
 }
 
 func (r PaymentNewParams) MarshalJSON() (data []byte, err error) {

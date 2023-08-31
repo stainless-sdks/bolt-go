@@ -30,7 +30,7 @@ func NewTestingCreditCardService(opts ...option.RequestOption) (r *TestingCredit
 
 // Retrieve test credit card information. This includes its token, which is
 // generated against the `4111 1111 1111 1004` test card.
-func (r *TestingCreditCardService) List(ctx context.Context, opts ...option.RequestOption) (res *CreditCard, err error) {
+func (r *TestingCreditCardService) Get(ctx context.Context, opts ...option.RequestOption) (res *CreditCard, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "testing/credit-cards"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)

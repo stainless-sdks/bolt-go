@@ -39,20 +39,20 @@ func NewAccountPaymentMethodService(opts ...option.RequestOption) (r *AccountPay
 // details must be tokenized using Bolt's JavaScript library function, which is
 // documented in
 // [Install the Bolt Tokenizer](https://help.bolt.com/developers/references/bolt-tokenizer).
-func (r *AccountPaymentMethodService) New(ctx context.Context, params AccountPaymentMethodNewParams, opts ...option.RequestOption) (res *PaymentMethod, err error) {
+func (r *AccountPaymentMethodService) New(ctx context.Context, body AccountPaymentMethodNewParams, opts ...option.RequestOption) (res *PaymentMethod, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "account/payment-methods"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
 // Delete an existing payment method. Deleting a payment method does not invalidate
 // transactions or orders that are associated with it.
-func (r *AccountPaymentMethodService) Delete(ctx context.Context, id string, body AccountPaymentMethodDeleteParams, opts ...option.RequestOption) (err error) {
+func (r *AccountPaymentMethodService) Delete(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = append(r.Options[:], opts...)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "")}, opts...)
 	path := fmt.Sprintf("account/payment-methods/%s", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, body, nil, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
 	return
 }
 
@@ -205,8 +205,7 @@ type AccountPaymentMethodNewParams struct {
 	// The last 4 digits of the credit card number.
 	Last4 param.Field[string] `json:"last4,required" format:"^\\d{4}$"`
 	// The credit card network.
-	Network         param.Field[AccountPaymentMethodNewParamsNetwork] `json:"network,required"`
-	XPublishableKey param.Field[string]                               `header:"X-Publishable-Key,required"`
+	Network param.Field[AccountPaymentMethodNewParamsNetwork] `json:"network,required"`
 }
 
 func (r AccountPaymentMethodNewParams) MarshalJSON() (data []byte, err error) {
@@ -291,7 +290,3 @@ const (
 	AccountPaymentMethodNewParamsNetworkAlliancedata AccountPaymentMethodNewParamsNetwork = "alliancedata"
 	AccountPaymentMethodNewParamsNetworkCitiplcc     AccountPaymentMethodNewParamsNetwork = "citiplcc"
 )
-
-type AccountPaymentMethodDeleteParams struct {
-	XPublishableKey param.Field[string] `header:"X-Publishable-Key,required"`
-}

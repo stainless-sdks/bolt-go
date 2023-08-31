@@ -51,10 +51,10 @@ func (r *WebhookService) Update(ctx context.Context, body WebhookUpdateParams, o
 }
 
 // Retrieve information about all existing webhooks.
-func (r *WebhookService) List(ctx context.Context, query WebhookListParams, opts ...option.RequestOption) (res *WebhookListResponse, err error) {
+func (r *WebhookService) List(ctx context.Context, opts ...option.RequestOption) (res *WebhookListResponse, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "webhooks"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
@@ -281,7 +281,3 @@ const (
 	WebhookUpdateParamsEventEventListEventListRiskInsights           WebhookUpdateParamsEventEventListEventList = "risk_insights"
 	WebhookUpdateParamsEventEventListEventListCreditCardDeleted      WebhookUpdateParamsEventEventListEventList = "credit_card_deleted"
 )
-
-type WebhookListParams struct {
-	XPublishableKey param.Field[string] `header:"X-Publishable-Key,required"`
-}

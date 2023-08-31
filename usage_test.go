@@ -18,12 +18,11 @@ func TestUsage(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
-	account, err := client.Accounts.Get(context.TODO(), bolt.AccountGetParams{
-		XPublishableKey: bolt.F("string"),
-	})
+	account, err := client.Accounts.Get(context.TODO())
 	if err != nil {
 		t.Error(err)
 	}
-	t.Logf("%+v\n", account)
+	t.Logf("%+v\n", account.Profile.Email)
 }

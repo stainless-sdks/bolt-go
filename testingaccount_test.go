@@ -20,6 +20,7 @@ func TestTestingAccountNewWithOptionalParams(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
 	_, err := client.Testing.Accounts.New(context.TODO(), bolt.TestingAccountNewParams{
 		DeactivateAt: bolt.F(time.Now()),

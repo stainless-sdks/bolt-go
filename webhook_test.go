@@ -19,6 +19,7 @@ func TestWebhookGet(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
 	_, err := client.Webhooks.Get(context.TODO(), "wh_za7VbYcSQU2zRgGQXQAm-g")
 	if err != nil {
@@ -38,6 +39,7 @@ func TestWebhookUpdate(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
 	_, err := client.Webhooks.Update(context.TODO(), bolt.WebhookUpdateParams{
 		Event: bolt.F[bolt.WebhookUpdateParamsEvent](bolt.WebhookUpdateParamsEventEventGroup(bolt.WebhookUpdateParamsEventEventGroup{
@@ -62,10 +64,9 @@ func TestWebhookList(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
-	_, err := client.Webhooks.List(context.TODO(), bolt.WebhookListParams{
-		XPublishableKey: bolt.F("string"),
-	})
+	_, err := client.Webhooks.List(context.TODO())
 	if err != nil {
 		var apierr *bolt.Error
 		if errors.As(err, &apierr) {
@@ -82,6 +83,7 @@ func TestWebhookDelete(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
 	err := client.Webhooks.Delete(context.TODO(), "wh_za7VbYcSQU2zRgGQXQAm-g")
 	if err != nil {

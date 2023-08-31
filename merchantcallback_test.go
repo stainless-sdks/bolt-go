@@ -19,9 +19,9 @@ func TestMerchantCallbackUpdateWithOptionalParams(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
-	_, err := client.Merchant.Callbacks.Update(context.TODO(), bolt.MerchantCallbackUpdateParams{
-		XPublishableKey:               bolt.F("string"),
+	_, err := client.Merchants.Callbacks.Update(context.TODO(), bolt.MerchantCallbackUpdateParams{
 		AccountPage:                   bolt.F("https://www.example.com/account"),
 		BaseDomain:                    bolt.F("https://www.example.com/"),
 		ConfirmationRedirect:          bolt.F("https://www.example.com/bolt/redirect"),
@@ -58,10 +58,9 @@ func TestMerchantCallbackList(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
-	_, err := client.Merchant.Callbacks.List(context.TODO(), bolt.MerchantCallbackListParams{
-		XPublishableKey: bolt.F("string"),
-	})
+	_, err := client.Merchants.Callbacks.List(context.TODO())
 	if err != nil {
 		var apierr *bolt.Error
 		if errors.As(err, &apierr) {

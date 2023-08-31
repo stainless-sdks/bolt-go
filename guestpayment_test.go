@@ -19,8 +19,9 @@ func TestGuestPaymentNewWithOptionalParams(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
-	_, err := client.Guest.Payments.New(context.TODO(), bolt.GuestPaymentNewParams{
+	_, err := client.Guests.Payments.New(context.TODO(), bolt.GuestPaymentNewParams{
 		Cart: bolt.F(bolt.GuestPaymentNewParamsCart{
 			Amounts: bolt.F(bolt.GuestPaymentNewParamsCartAmounts{
 				Total:    bolt.F(int64(900)),
@@ -120,7 +121,6 @@ func TestGuestPaymentNewWithOptionalParams(t *testing.T) {
 			Success: bolt.F("www.example.com/handle_paypal_success"),
 			Cancel:  bolt.F("www.example.com/handle_paypal_cancel"),
 		}),
-		XPublishableKey: bolt.F("string"),
 	})
 	if err != nil {
 		var apierr *bolt.Error

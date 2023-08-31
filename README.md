@@ -37,16 +37,15 @@ import (
 
 func main() {
 	client := bolt.NewClient(
-		option.WithAPIKey("my api key"),      // defaults to os.LookupEnv("BOLT_API_KEY")
-		option.WithEnvironmentEnvironment1(), // defaults to option.WithEnvironmentProduction()
+		option.WithAPIKey("my api key"),          // defaults to os.LookupEnv("BOLT_API_KEY")
+		option.WithPublishableKey("ABC.123.345"), // defaults to os.LookupEnv("BOLT_PUBLISHABLE_KEY")
+		option.WithEnvironmentSandbox(),          // defaults to option.WithEnvironmentProduction()
 	)
-	account, err := client.Accounts.Get(context.TODO(), bolt.AccountGetParams{
-		XPublishableKey: bolt.F("string"),
-	})
+	account, err := client.Accounts.Get(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", account)
+	fmt.Printf("%+v\n", account.Profile.Email)
 }
 
 ```
@@ -172,9 +171,7 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Accounts.Get(context.TODO(), bolt.AccountGetParams{
-	XPublishableKey: bolt.F("string"),
-})
+_, err := client.Accounts.Get(context.TODO())
 if err != nil {
 	var apierr *bolt.Error
 	if errors.As(err, &apierr) {
@@ -202,9 +199,6 @@ ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
 client.Accounts.Get(
 	ctx,
-	bolt.AccountGetParams{
-		XPublishableKey: bolt.F("string"),
-	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -225,13 +219,7 @@ client := bolt.NewClient(
 )
 
 // Override per-request:
-client.Accounts.Get(
-	context.TODO(),
-	bolt.AccountGetParams{
-		XPublishableKey: bolt.F("string"),
-	},
-	option.WithMaxRetries(5),
-)
+client.Accounts.Get(context.TODO(), option.WithMaxRetries(5))
 ```
 
 ### Middleware

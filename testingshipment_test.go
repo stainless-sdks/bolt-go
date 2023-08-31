@@ -20,6 +20,7 @@ func TestTestingShipmentNewWithOptionalParams(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
 	err := client.Testing.Shipments.New(context.TODO(), bolt.TestingShipmentNewParams{
 		Status: bolt.F(bolt.TestingShipmentNewParamsStatusInTransit),

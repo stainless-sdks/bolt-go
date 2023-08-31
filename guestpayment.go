@@ -31,10 +31,10 @@ func NewGuestPaymentService(opts ...option.RequestOption) (r *GuestPaymentServic
 
 // Initialize a Bolt payment token that will be used to reference this payment to
 // Bolt when it is updated or finalized for guest shoppers.
-func (r *GuestPaymentService) New(ctx context.Context, params GuestPaymentNewParams, opts ...option.RequestOption) (res *GuestPaymentNewResponse, err error) {
+func (r *GuestPaymentService) New(ctx context.Context, body GuestPaymentNewParams, opts ...option.RequestOption) (res *GuestPaymentNewResponse, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "guest/payments"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
@@ -104,9 +104,8 @@ const (
 )
 
 type GuestPaymentNewParams struct {
-	Cart            param.Field[GuestPaymentNewParamsCart]          `json:"cart,required"`
-	PaymentMethod   param.Field[GuestPaymentNewParamsPaymentMethod] `json:"payment_method,required"`
-	XPublishableKey param.Field[string]                             `header:"X-Publishable-Key,required"`
+	Cart          param.Field[GuestPaymentNewParamsCart]          `json:"cart,required"`
+	PaymentMethod param.Field[GuestPaymentNewParamsPaymentMethod] `json:"payment_method,required"`
 }
 
 func (r GuestPaymentNewParams) MarshalJSON() (data []byte, err error) {

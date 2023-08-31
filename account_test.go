@@ -19,10 +19,9 @@ func TestAccountGet(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
-	_, err := client.Accounts.Get(context.TODO(), bolt.AccountGetParams{
-		XPublishableKey: bolt.F("string"),
-	})
+	_, err := client.Accounts.Get(context.TODO())
 	if err != nil {
 		var apierr *bolt.Error
 		if errors.As(err, &apierr) {
@@ -39,13 +38,13 @@ func TestAccountExists(t *testing.T) {
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
 	err := client.Accounts.Exists(context.TODO(), bolt.AccountExistsParams{
 		Identifier: bolt.F(bolt.AccountExistsParamsIdentifier{
 			IdentifierType:  bolt.F(bolt.AccountExistsParamsIdentifierIdentifierTypeEmail),
 			IdentifierValue: bolt.F("alice@example.com"),
 		}),
-		XPublishableKey: bolt.F("string"),
 	})
 	if err != nil {
 		var apierr *bolt.Error

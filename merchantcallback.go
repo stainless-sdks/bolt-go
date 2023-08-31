@@ -31,23 +31,74 @@ func NewMerchantCallbackService(opts ...option.RequestOption) (r *MerchantCallba
 }
 
 // Update and configure callback URLs on the merchant such as OAuth URLs.
-func (r *MerchantCallbackService) Update(ctx context.Context, params MerchantCallbackUpdateParams, opts ...option.RequestOption) (res *CallbackURLs, err error) {
+func (r *MerchantCallbackService) Update(ctx context.Context, body MerchantCallbackUpdateParams, opts ...option.RequestOption) (res *CallbackURLs, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "merchant/callbacks"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, params, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPatch, path, body, &res, opts...)
 	return
 }
 
 // Return callback URLs configured on the merchant such as OAuth URLs.
-func (r *MerchantCallbackService) List(ctx context.Context, query MerchantCallbackListParams, opts ...option.RequestOption) (res *CallbackURLs, err error) {
+func (r *MerchantCallbackService) List(ctx context.Context, opts ...option.RequestOption) (res *CallbackURLs, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "merchant/callbacks"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
+type CallbackURLs struct {
+	AccountPage                   string `json:"account_page" format:"uri"`
+	BaseDomain                    string `json:"base_domain" format:"uri"`
+	ConfirmationRedirect          string `json:"confirmation_redirect" format:"uri"`
+	CreateOrder                   string `json:"create_order" format:"uri"`
+	Debug                         string `json:"debug" format:"uri"`
+	GetAccount                    string `json:"get_account" format:"uri"`
+	MobileAppDomain               string `json:"mobile_app_domain" format:"uri"`
+	OauthLogout                   string `json:"oauth_logout" format:"uri"`
+	OauthRedirect                 string `json:"oauth_redirect" format:"uri"`
+	PrivacyPolicy                 string `json:"privacy_policy" format:"uri"`
+	ProductInfo                   string `json:"product_info" format:"uri"`
+	RemoteAPI                     string `json:"remote_api" format:"uri"`
+	Shipping                      string `json:"shipping" format:"uri"`
+	SupportPage                   string `json:"support_page" format:"uri"`
+	Tax                           string `json:"tax" format:"uri"`
+	TermsOfService                string `json:"terms_of_service" format:"uri"`
+	UniversalMerchantAPI          string `json:"universal_merchant_api" format:"uri"`
+	UpdateCart                    string `json:"update_cart" format:"uri"`
+	ValidateAdditionalAccountData string `json:"validate_additional_account_data" format:"uri"`
+	JSON                          callbackURLsJSON
+}
+
+// callbackURLsJSON contains the JSON metadata for the struct [CallbackURLs]
+type callbackURLsJSON struct {
+	AccountPage                   apijson.Field
+	BaseDomain                    apijson.Field
+	ConfirmationRedirect          apijson.Field
+	CreateOrder                   apijson.Field
+	Debug                         apijson.Field
+	GetAccount                    apijson.Field
+	MobileAppDomain               apijson.Field
+	OauthLogout                   apijson.Field
+	OauthRedirect                 apijson.Field
+	PrivacyPolicy                 apijson.Field
+	ProductInfo                   apijson.Field
+	RemoteAPI                     apijson.Field
+	Shipping                      apijson.Field
+	SupportPage                   apijson.Field
+	Tax                           apijson.Field
+	TermsOfService                apijson.Field
+	UniversalMerchantAPI          apijson.Field
+	UpdateCart                    apijson.Field
+	ValidateAdditionalAccountData apijson.Field
+	raw                           string
+	ExtraFields                   map[string]apijson.Field
+}
+
+func (r *CallbackURLs) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
 type MerchantCallbackUpdateParams struct {
-	XPublishableKey               param.Field[string] `header:"X-Publishable-Key,required"`
 	AccountPage                   param.Field[string] `json:"account_page" format:"uri"`
 	BaseDomain                    param.Field[string] `json:"base_domain" format:"uri"`
 	ConfirmationRedirect          param.Field[string] `json:"confirmation_redirect" format:"uri"`
@@ -71,8 +122,4 @@ type MerchantCallbackUpdateParams struct {
 
 func (r MerchantCallbackUpdateParams) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
-}
-
-type MerchantCallbackListParams struct {
-	XPublishableKey param.Field[string] `header:"X-Publishable-Key,required"`
 }

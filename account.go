@@ -36,20 +36,20 @@ func NewAccountService(opts ...option.RequestOption) (r *AccountService) {
 }
 
 // Retrieve a shopper's account details, such as addresses and payment information
-func (r *AccountService) Get(ctx context.Context, query AccountGetParams, opts ...option.RequestOption) (res *Account, err error) {
+func (r *AccountService) Get(ctx context.Context, opts ...option.RequestOption) (res *Account, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "account"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
 // Determine whether or not an identifier is associated with an existing Bolt
 // account.
-func (r *AccountService) Exists(ctx context.Context, params AccountExistsParams, opts ...option.RequestOption) (err error) {
+func (r *AccountService) Exists(ctx context.Context, query AccountExistsParams, opts ...option.RequestOption) (err error) {
 	opts = append(r.Options[:], opts...)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "")}, opts...)
 	path := "account/exists"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, params, nil, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, nil, opts...)
 	return
 }
 
@@ -100,15 +100,10 @@ func (r *Profile) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type AccountGetParams struct {
-	XPublishableKey param.Field[string] `header:"X-Publishable-Key,required"`
-}
-
 type AccountExistsParams struct {
 	// A type and value combination that defines the identifier used to detect the
 	// existence of an account.
-	Identifier      param.Field[AccountExistsParamsIdentifier] `query:"identifier,required"`
-	XPublishableKey param.Field[string]                        `header:"X-Publishable-Key,required"`
+	Identifier param.Field[AccountExistsParamsIdentifier] `query:"identifier,required"`
 }
 
 // URLQuery serializes [AccountExistsParams]'s query parameters as `url.Values`.

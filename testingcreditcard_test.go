@@ -12,15 +12,16 @@ import (
 	"github.com/bolt/bolt-go/option"
 )
 
-func TestTestingCreditCardList(t *testing.T) {
+func TestTestingCreditCardGet(t *testing.T) {
 	if !testutil.CheckTestServer(t) {
 		return
 	}
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
+		option.WithPublishableKey("ABC.123.345"),
 	)
-	_, err := client.Testing.CreditCards.List(context.TODO())
+	_, err := client.Testing.CreditCards.Get(context.TODO())
 	if err != nil {
 		var apierr *bolt.Error
 		if errors.As(err, &apierr) {

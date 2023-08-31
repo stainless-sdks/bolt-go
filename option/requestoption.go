@@ -3,7 +3,6 @@
 package option
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -186,7 +185,7 @@ func WithRequestTimeout(dur time.Duration) RequestOption {
 func WithAPIKey(key string) RequestOption {
 	return func(r *requestconfig.RequestConfig) error {
 		r.APIKey = key
-		return r.Apply(WithHeader("Authorization", fmt.Sprintf("Bearer %s", r.APIKey)))
+		return r.Apply(WithHeader("X-API-Key", r.APIKey))
 	}
 }
 
@@ -194,12 +193,28 @@ func WithAPIKey(key string) RequestOption {
 // environment to be the "production" environment. An environment specifies which base URL
 // to use by default.
 func WithEnvironmentProduction() RequestOption {
-	return WithBaseURL("https://api.{username}.dev.bolt.me/v3/")
+	return WithBaseURL("https://api.bolt.com/v3/")
 }
 
-// WithEnvironmentEnvironment1 returns a RequestOption that sets the current
-// environment to be the "environment_1" environment. An environment specifies which base URL
+// WithEnvironmentSandbox returns a RequestOption that sets the current
+// environment to be the "sandbox" environment. An environment specifies which base URL
 // to use by default.
-func WithEnvironmentEnvironment1() RequestOption {
-	return WithBaseURL("https://{environment}.bolt.com/v3/")
+func WithEnvironmentSandbox() RequestOption {
+	return WithBaseURL("https://api-sandbox.bolt.com/v3/")
+}
+
+// WithSigningSecret returns a RequestOption that sets the client setting "signing_secret".
+func WithSigningSecret(value string) RequestOption {
+	return func(r *requestconfig.RequestConfig) error {
+		r.SigningSecret = value
+		return nil
+	}
+}
+
+// WithPublishableKey returns a RequestOption that sets the client setting "publishable_key".
+func WithPublishableKey(value string) RequestOption {
+	return func(r *requestconfig.RequestConfig) error {
+		r.PublishableKey = value
+		return r.Apply(WithHeader("X-Publishable-Key", value))
+	}
 }
