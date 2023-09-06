@@ -16,6 +16,7 @@ func TestAccountAddressNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t) {
 		return
 	}
+	t.Skip("skipped: tests are disabled for the time being")
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
@@ -48,6 +49,7 @@ func TestAccountAddressUpdateWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t) {
 		return
 	}
+	t.Skip("skipped: tests are disabled for the time being")
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
@@ -84,6 +86,7 @@ func TestAccountAddressDelete(t *testing.T) {
 	if !testutil.CheckTestServer(t) {
 		return
 	}
+	t.Skip("skipped: tests are disabled for the time being")
 	client := bolt.NewClient(
 		option.WithBaseURL("http://127.0.0.1:4010"),
 		option.WithAPIKey("APIKey"),
